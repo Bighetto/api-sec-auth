@@ -34,5 +34,16 @@ public class AuthProvider implements AuthDataProvider {
 
         return this.userModelToEntityConverter.convertToEntity(model.get());
     }
+
+    @Override
+    public UserEntity findByEmail(String email) {
+        Optional<UserModel> model = this.userRepository.findByEmail(email);
+
+        if (model.isEmpty()) {
+            throw new RuntimeException();
+        }
+
+        return this.userModelToEntityConverter.convertToEntity(model.get());
+    }
     
 }

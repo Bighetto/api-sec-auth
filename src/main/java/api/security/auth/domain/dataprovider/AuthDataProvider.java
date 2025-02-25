@@ -8,5 +8,7 @@ public interface AuthDataProvider {
     void saveNewUser(UserModel model);
 
     UserEntity findByDocument(String document);
+
+    UserEntity findByEmail(String email);
     
 }

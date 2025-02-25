@@ -4,10 +4,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import api.security.auth.app.converter.UserRestModelToEntityConverter;
 import api.security.auth.app.model.UserModel;
+import api.security.auth.app.restmodel.ChangePasswordRestModel;
 import api.security.auth.app.restmodel.UserRestModel;
 import api.security.auth.domain.entity.UserEntity;
 import api.security.auth.domain.usecase.RegisterNewUserUseCase;
 import api.security.auth.domain.usecase.SearchUserByDocumentUseCase;
+import api.security.auth.domain.usecase.SearchUserByEmailUseCase;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -24,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @AllArgsConstructor
 public class UserController implements UserResource {
 
-    private final SearchUserByDocumentUseCase searchUserByDocumentUseCase;
+    private final SearchUserByEmailUseCase searchUserByEmailUseCase;
     private final RegisterNewUserUseCase registerNewUserUseCase;
     private final UserRestModelToEntityConverter userRestModelToEntityConverter;
 
@@ -46,6 +48,28 @@ public class UserController implements UserResource {
             return ResponseEntity.badRequest().build();
         }
         
+    }
+
+    @Override
+    @PostMapping("/update/password")
+    public ResponseEntity<String> changeUserPassword(@RequestBody ChangePasswordRestModel restmodel) {
+        
+        try{
+            UserEntity entity = this.searchUserByEmailUseCase.execute(restmodel.getEmail());
+
+            String encryptedPassword = new BCryptPasswordEncoder().encode(restmodel.getPassword());
+
+            UserModel model = new UserModel(entity.getDocument(), entity.getName(), entity.getEmail(), entity.getPhoneNumber(), "cliente", encryptedPassword, LocalDateTime.now());
+
+            this.registerNewUserUseCase.execute(model);
+
+            return ResponseEntity.ok().body("Passowrd updated with sucessful");
+
+        }catch(Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+        
+
     }
     
     
