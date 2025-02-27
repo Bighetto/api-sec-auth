@@ -37,7 +37,7 @@ public class AuthProvider implements AuthDataProvider {
 
     @Override
     public UserEntity findByEmail(String email) {
-        Optional<UserModel> model = this.userRepository.findByEmail(email);
+        Optional<UserModel> model = Optional.ofNullable(this.userRepository.findByEmail(email));
 
         if (model.isEmpty()) {
             throw new RuntimeException();

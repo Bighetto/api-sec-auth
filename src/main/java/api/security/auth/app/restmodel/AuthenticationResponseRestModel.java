@@ -1,16 +1,15 @@
 package api.security.auth.app.restmodel;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
-@Data
 @AllArgsConstructor
-@Builder
-public class ChangePasswordRestModel {
+@Data
+public class AuthenticationResponseRestModel {
 
     private String email;
-    private String password;
-    private String tipo;
+    private String nome;
+    private String token;
+    private String role;
     
 }
