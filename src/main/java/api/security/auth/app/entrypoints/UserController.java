@@ -13,6 +13,7 @@ import api.security.auth.app.security.TokenService;
 import api.security.auth.domain.entity.UserEntity;
 import api.security.auth.domain.usecase.RegisterNewUserUseCase;
 import api.security.auth.domain.usecase.SearchUserByEmailUseCase;
+import api.security.auth.domain.usecase.SendEmailUseCase;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -38,6 +39,7 @@ public class UserController implements UserResource {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final SecurityConfig securityConfig;
+    private final SendEmailUseCase sendEmailUseCase;
 
     @Override
     @PostMapping("/create")
@@ -51,6 +53,8 @@ public class UserController implements UserResource {
             UserModel model = new UserModel(entity.getDocument(), entity.getName(), entity.getEmail(), entity.getPhoneNumber(), "cliente", encryptedPassword, LocalDateTime.now());
 
             this.registerNewUserUseCase.execute(model);
+
+            this.sendEmailUseCase.execute(entity.getEmail(), entity.getName(), entity.getDocument());
             
             return ResponseEntity.ok().body("The new user has been registered!");
         }catch(Exception e){
