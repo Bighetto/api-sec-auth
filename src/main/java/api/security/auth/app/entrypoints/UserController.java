@@ -100,7 +100,7 @@ public class UserController implements UserResource {
     
             final String jwt = tokenService.generateToken(userDetails);
 
-            AuthenticationResponseRestModel responseRestModel = new AuthenticationResponseRestModel(nome, email, jwt, role);
+            AuthenticationResponseRestModel responseRestModel = new AuthenticationResponseRestModel(email, nome, jwt, role);
     
             return ResponseEntity.ok(responseRestModel);
         } catch (Exception e) {
